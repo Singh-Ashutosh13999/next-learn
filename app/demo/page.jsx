@@ -1,19 +1,22 @@
+export const dynamic = 'force-dynamic';
+
 async function getData() {
- const res = await fetch("/api/demo");
+  const res = await fetch("http://localhost:3000/api/demo", {
+    next: { revalidate: 60 }
+  });
   return res.json();
 }
 
 export default async function Demo() {
   const users = await getData();
   return (
-  
-  <div
-    style={{
-      minHeight: "100vh",
-      background: "#f3f4f6",
-      padding: "50px",
-    }}
-  >
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "#f3f4f6",
+        padding: "50px",
+      }}
+    >
     <h1
       style={{
         textAlign: "center",
