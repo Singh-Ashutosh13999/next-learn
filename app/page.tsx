@@ -1,3 +1,6 @@
+
+import Link from "next/link";
+
 export default function HomePage() {
   return (
     
@@ -43,7 +46,8 @@ export default function HomePage() {
             more through real-world projects.
           </p>
 
-          <button
+          <Link href="/course">
+            <button
             style={{
               marginTop: "30px",
               padding: "15px 35px",
@@ -55,9 +59,10 @@ export default function HomePage() {
               cursor: "pointer",
               fontWeight: "bold",
             }}
-          >
-            Get Started
-          </button>
+            >
+              Get Started
+            </button>
+          </Link>
         </div>
 
         <div>
@@ -183,7 +188,9 @@ export default function HomePage() {
           Join thousands of developers learning modern web development.
         </p>
 
-        <button
+        <Link href="/course"
+          className="inline-block rounded-lg bg-blue-600 px-8 py-4 font-bold text-white">
+          <button
           style={{
             padding: "15px 40px",
             background: "#2563eb",
@@ -194,9 +201,10 @@ export default function HomePage() {
             fontSize: "18px",
             fontWeight: "bold",
           }}
-        >
-          Explore Courses
-        </button>
+          >
+            Explore Courses
+          </button>
+        </Link>
       </section>
     </div>
   );
