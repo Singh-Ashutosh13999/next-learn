@@ -191,16 +191,7 @@ export default function HomePage() {
         <Link href="/course"
           className="inline-block rounded-lg bg-blue-600 px-8 py-4 font-bold text-white">
           <button
-          style={{
-            padding: "15px 40px",
-            background: "#2563eb",
-            color: "white",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontSize: "18px",
-            fontWeight: "bold",
-          }}
+           
           >
             Explore Courses
           </button>
