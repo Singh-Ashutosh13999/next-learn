@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LogoutButton from "../components/logout-button.jsx";
 
 export default function DashboardLayout({ children }) {
   const links = [
@@ -33,9 +34,7 @@ export default function DashboardLayout({ children }) {
         </nav>
 
         <div className="p-5 border-t border-slate-700">
-          <button className="w-full bg-red-500 hover:bg-red-600 py-2 rounded-lg">
-            Logout
-          </button>
+          <LogoutButton className="w-full bg-red-500 hover:bg-red-600 py-2 rounded-lg" />
         </div>
 
       </aside>

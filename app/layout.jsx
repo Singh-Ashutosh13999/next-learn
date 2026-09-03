@@ -1,8 +1,11 @@
 import "./globals.css";
 import Footer from "./footer.jsx";
 import Link from "next/link";
+import { cookies } from "next/headers";
+import LogoutButton from "./components/logout-button.jsx";
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const isLoggedIn = (await cookies()).has("auth-token");
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
@@ -40,15 +43,16 @@ export default function RootLayout({ children }) {
               </nav>
 
               <div className="flex items-center gap-3">
-                <Link
-                  href="/login"
-                  className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-600 hover:text-blue-600"
-                >
-                  Login
-                </Link>
-                <button className="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700">
-                  Logout
-                </button>
+                {isLoggedIn ? (
+                  <LogoutButton className="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700" />
+                ) : (
+                  <Link
+                    href="/login"
+                    className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:border-blue-600 hover:text-blue-600"
+                  >
+                    Login
+                  </Link>
+                )}
               </div>
             </div>
           </header>
