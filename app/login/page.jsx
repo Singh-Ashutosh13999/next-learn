@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
  
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -10,8 +10,36 @@ export default function LoginPage() {
    
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
+  const [registered, setRegistered] = useState(false);
+  const [notice, setNotice] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setRegistered(params.get("registered") === "1");
+
+    const reason = params.get("reason");
+    if (reason === "logged-out") {
+      setNotice("You have been logged out successfully. Please sign in again.");
+    } else if (reason === "auth-required") {
+      setNotice("Please sign in to continue.");
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!error && !registered && !notice) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setError("");
+      setRegistered(false);
+      setNotice("");
+    }, 4000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [error, registered, notice]);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -28,7 +56,15 @@ export default function LoginPage() {
           password: formData.get("password"),
         }),
       });
-      const result = await response.json();
+      const responseText = await response.text();
+      let result;
+      try {
+        result = JSON.parse(responseText);
+      } catch {
+        throw new Error(
+          "The server returned an unexpected response. Please restart the Next.js server and try again.",
+        );
+      }
       if (!response.ok) {
         throw new Error(result.error || "Login failed.");
       }
@@ -77,29 +113,32 @@ export default function LoginPage() {
                 />
               </div>
 
-            <div>
-  <label className="mb-2 block text-sm font-medium text-slate-700">
-    Password
-  </label>
+                  <div>
+                    <label htmlFor="password" className="mb-2 block text-sm font-medium text-slate-700">
+                      Password
+                    </label>
 
-  <div className="relative">
-    <input
-      type={showPassword ? "text" : "password"}
-      name="password"
-      placeholder="••••••••"
-      required
-      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-12 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-    />
+                    <div className="relative">
+                      <input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        name="password"
+                        placeholder="••••••••"
+                        autoComplete="current-password"
+                        required
+                        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 pr-12 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+                      />
 
-    <span
-      type="span"
-      onClick={() => setShowPassword(!showPassword)}
-      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
-    >
-      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-    </span>
-  </div>
-</div>
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        aria-label={showPassword ? "Hide password" : "Show password"}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-700"
+                      >
+                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                      </button>
+                    </div>
+                  </div>
 
               <div className="flex items-center justify-between text-sm">
                 <label className="flex items-center gap-2 text-slate-600">
@@ -111,16 +150,39 @@ export default function LoginPage() {
                 </a>
               </div>
 
-              {error && <p className="text-sm text-red-600" role="alert">{error}</p>}
+              {error && (
+                <div
+                  className="fixed left-1/2 top-5 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-700 shadow-lg"
+                  role="alert"
+                >
+                  {error}
+                  {error.startsWith("No account found") && (
+                    <>
+                      {" "}
+                      <Link href="/signup" className="font-semibold underline">
+                        Sign up now
+                      </Link>
+                    </>
+                  )}
+                </div>
+              )}
+              {(registered || notice) && (
+                <div
+                  className="fixed left-1/2 top-5 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 rounded-xl border border-green-200 bg-green-50 px-4 py-3 text-sm font-medium text-green-700 shadow-lg"
+                  role="status"
+                >
+                  {registered ? "Account created. Sign in to continue." : notice}
+                </div>
+              )}
               <button disabled={loading} className="w-full rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60">
                 {loading ? "Signing in..." : "Sign In"}
               </button>
             </form>
 
             <div className="mt-6 text-center text-sm text-slate-500">
-              Don’t have an account?{' '}
-              <Link href="/" className="font-semibold text-blue-600 hover:text-blue-700">
-                Go Home
+              Don’t have an account?{" "}
+              <Link href="/signup" className="font-semibold text-blue-600 hover:text-blue-700">
+                Sign up
               </Link>
             </div>
           </div>

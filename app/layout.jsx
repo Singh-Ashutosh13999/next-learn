@@ -15,7 +15,7 @@ export default async function RootLayout({ children }) {
   ];
 
   return (
-    <html lang="en">
+    <html lang="en" data-scroll-behavior="smooth">
       <body className="m-0 min-h-screen bg-slate-50 text-slate-900">
         <div className="flex min-h-screen flex-col">
           <header className="border-b border-slate-200 bg-white/90 shadow-sm backdrop-blur-sm">

@@ -19,7 +19,7 @@ export default function LogoutButton({ className = "" }) {
 
       // Force a fresh request so protected pages cannot remain visible from the
       // client router cache after the auth cookie has been removed.
-      window.location.replace("/login");
+      window.location.replace("/login?reason=logged-out");
     } catch (error) {
       setLoading(false);
       setError(error.message);

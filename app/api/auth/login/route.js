@@ -13,9 +13,13 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Please submit valid login details.' }, { status: 400 });
   }
 
+  if (!credentials || typeof credentials !== 'object' || Array.isArray(credentials)) {
+    return NextResponse.json({ error: 'Please submit valid login details.' }, { status: 400 });
+  }
+
   const { email, password } = credentials;
 
-  if (!email || !password) {
+  if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
     return NextResponse.json({ error: 'Email and password are required.' }, { status: 400 });
   }
 
@@ -34,13 +38,17 @@ export async function POST(request) {
 
   try {
     await connectDB();
-    let user = await User.findOne({ email: normalizedEmail });
+    const user = await User.findOne({ email: normalizedEmail });
 
     if (!user) {
-      const passwordHash = await bcrypt.hash(password, 12);
-      user = await User.create({ email: normalizedEmail, password: passwordHash });
-    } else if (!(await bcrypt.compare(password, user.password))) {
-      return NextResponse.json({ error: 'Invalid email or password.' }, { status: 401 });
+      return NextResponse.json(
+        { error: 'No account found. Please sign up first, then log in.' },
+        { status: 401 },
+      );
+    }
+
+    if (!(await bcrypt.compare(password, user.password))) {
+      return NextResponse.json({ error: 'Incorrect email or password.' }, { status: 401 });
     }
 
     const token = jwt.sign(
@@ -59,6 +67,17 @@ export async function POST(request) {
     return response;
   } catch (error) {
     console.error('Login failed:', error);
+    if (error?.message?.startsWith('MONGODB_URI is invalid')) {
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    if (error?.name === 'MongoServerSelectionError' || error?.code === 'ENOTFOUND') {
+      return NextResponse.json(
+        { error: 'MongoDB could not be reached. Check your connection string and Atlas network access.' },
+        { status: 503 },
+      );
+    }
+
     return NextResponse.json(
       { error: 'Unable to connect to the database. Check your MongoDB connection settings.' },
       { status: 500 },
