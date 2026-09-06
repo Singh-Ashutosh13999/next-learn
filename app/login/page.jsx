@@ -21,7 +21,7 @@ export default function LoginPage() {
 
     const reason = params.get("reason");
     if (reason === "logged-out") {
-      setNotice("You have been logged out successfully. Please sign in again.");
+      setNotice("You have been logged out Successfully. Please sign in again.");
     } else if (reason === "auth-required") {
       setNotice("Please sign in to continue.");
     }
