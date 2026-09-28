@@ -3,6 +3,7 @@ import Footer from "./footer.jsx";
 import Link from "next/link";
 import { cookies } from "next/headers";
 import LogoutButton from "./components/logout-button.jsx";
+import MobileNav from "./components/mobile-nav.jsx";
 
 export default async function RootLayout({ children }) {
   const isLoggedIn = (await cookies()).has("auth-token");
@@ -18,7 +19,7 @@ export default async function RootLayout({ children }) {
     <html lang="en" data-scroll-behavior="smooth">
       <body className="m-0 min-h-screen bg-slate-50 text-slate-900">
         <div className="flex min-h-screen flex-col">
-          <header className="border-b border-slate-200 bg-white/90 shadow-sm backdrop-blur-sm">
+          <header className="relative border-b border-slate-200 bg-white/90 shadow-sm backdrop-blur-sm">
             <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
               <Link href="/" className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 font-semibold text-white shadow-md">
@@ -43,6 +44,7 @@ export default async function RootLayout({ children }) {
               </nav>
 
               <div className="flex items-center gap-3">
+                <MobileNav links={navLinks} />
                 {isLoggedIn ? (
                   <LogoutButton className="rounded-full bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-blue-700" />
                 ) : (

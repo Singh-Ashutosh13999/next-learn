@@ -17,7 +17,7 @@ export default function User() {
 
         <main className="grid gap-6 md:grid-cols-3">
           {/* Profile Card */}
-          <section className="col-span-1 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+          <section className="col-span-1 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm  items-center justify-center">
             <div className="flex flex-col items-center text-center">
               <img src="https://i.pravatar.cc/150" alt="User avatar" className="h-28 w-28 rounded-full border-4 border-blue-500 object-cover shadow-md" />
               <h2 className="mt-4 text-lg font-semibold text-gray-800">Ashutosh Singh</h2>

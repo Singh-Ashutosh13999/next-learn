@@ -42,7 +42,7 @@ export default function HomePage() {
               fontWeight: "bold",
             }}
           >
-            Get Started
+            Get Started the Courses
           </Link>
         </div>
 
@@ -65,7 +65,7 @@ export default function HomePage() {
           Why Learn With Us?
         </h2>
         <p style={{ color: "#64748b", marginBottom: "50px", fontSize: "18px" }}>
-          Everything you need to become a modern web developer.
+          Everything you need to become a modern web developer .
         </p>
 
         <div

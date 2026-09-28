@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import { Star, Users, Clock, Code } from "lucide-react";
 
 const courses = [
@@ -82,6 +84,11 @@ const courses = [
 ];
 
 export default function CourseWeb() {
+  const [selectedCourse, setSelectedCourse] = useState(null);
+  const [formData, setFormData] = useState({ name: '', phone: '', email: '' });
+  const [showQR, setShowQR] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100">
       {/* Header Section */}
@@ -130,11 +137,10 @@ export default function CourseWeb() {
                     {[...Array(5)].map((_, i) => (
                       <Star
                         key={i}
-                        className={`w-4 h-4 ${
-                          i < Math.floor(course.rating)
-                            ? "fill-yellow-400 text-yellow-400"
-                            : "text-gray-300"
-                        }`}
+                        className={`w-4 h-4 ${i < Math.floor(course.rating)
+                          ? "fill-yellow-400 text-yellow-400"
+                          : "text-gray-300"
+                          }`}
                       />
                     ))}
                   </div>
@@ -186,7 +192,10 @@ export default function CourseWeb() {
                   <div className="text-2xl font-bold text-blue-600">
                     ${course.price}
                   </div>
-                  <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200">
+                  <button
+                    onClick={() => setSelectedCourse(course)}
+                    className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200"
+                  >
                     Enroll Now
                   </button>
                 </div>
@@ -233,6 +242,119 @@ export default function CourseWeb() {
           </div>
         </div>
       </div>
+
+      {/* Modal */}
+      {selectedCourse && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden relative transform transition-all">
+            {/* Header with Course Image as Background */}
+            <div className="relative h-32 bg-blue-700">
+              <img
+                src={selectedCourse.image}
+                alt={selectedCourse.title}
+                className="w-full h-full object-cover opacity-30 mix-blend-overlay"
+              />
+              <button
+                onClick={() => { setSelectedCourse(null); setShowQR(false); }}
+                className="absolute top-4 right-4 bg-black/20 hover:bg-black/40 text-white rounded-full p-1.5 transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+              <div className="absolute bottom-4 left-6 right-6 text-white">
+                <h2 className="text-xl font-bold line-clamp-1">{selectedCourse.title}</h2>
+                <div className="flex items-center justify-between mt-1">
+                  <span className="text-sm font-medium opacity-90">{selectedCourse.level}</span>
+                  <span className="text-lg font-bold">${selectedCourse.price}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Form or QR Section */}
+            <div className="p-6 pt-5">
+              {showQR ? (
+                <div className="text-center py-4">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">Scan to Pay</h3>
+                  <p className="text-sm text-gray-500 mb-6">Amount: ${selectedCourse.price}</p>
+                  <div className="bg-gray-100 p-4 rounded-xl inline-block mb-6">
+                    <img src="/qr-code.jpeg" alt="Payment QR Code" className="w-48 h-48 mx-auto mix-blend-multiply" />
+                  </div>
+                  <p className="text-xs text-gray-500 mb-6">Scan with any UPI/Payment app to complete your enrollment.</p>
+                  <button onClick={() => { setShowSuccess(true); setTimeout(() => setShowSuccess(false), 5000); setShowQR(false); setSelectedCourse(null); setFormData({ name: '', phone: '', email: '' }); }} className="w-full bg-gray-900 hover:bg-black text-white font-bold py-3.5 px-4 rounded-xl shadow-md hover:shadow-lg transition-all duration-200">
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <div className="mb-5 pb-4 border-b border-gray-100 flex items-center justify-between text-sm text-gray-600">
+                    <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-blue-500" /> {selectedCourse.duration}</span>
+                    <span className="flex items-center gap-1.5"><Users className="w-4 h-4 text-blue-500" /> {selectedCourse.instructor}</span>
+                  </div>
+                  <form
+                    onSubmit={async (e) => {
+                      e.preventDefault();
+
+                      // Show the QR code immediately
+                      setShowQR(true);
+
+                      const formData = new FormData(e.target);
+                      const data = {
+                        name: formData.get('name'),
+                        phone: formData.get('phone'),
+                        email: formData.get('email'),
+                        course: selectedCourse.title
+                      };
+
+                      try {
+                        // Attempt to send email in the background
+                        fetch('/api/send', {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify(data),
+                        });
+                      } catch (error) {
+                        console.error('Error sending email:', error);
+                      }
+                    }}
+                    className="space-y-4"
+                  >
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1.5">Full Name</label>
+                      <input id="name" name="name" required type="text" value={formData.name} onChange={(e) => setFormData({ ...formData, name: e.target.value })} className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all outline-none" placeholder="John Doe" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1.5">Mobile Number</label>
+                      <input id="phone" name="phone" required type="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all outline-none" placeholder="+1 (555) 000-0000" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-1.5">Email Address</label>
+                      <input id="email" name="email" required type="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all outline-none" placeholder="john@example.com" />
+                    </div>
+                    <button type="submit" className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3.5 px-4 rounded-xl shadow-md hover:shadow-lg transform hover:-translate-y-0.5 transition-all duration-200 mt-6 flex justify-center items-center gap-2">
+                      Complete Enrollment <span className="text-blue-300 font-normal">|</span> ${selectedCourse.price}
+                    </button>
+                  </form>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modern Success Toast */}
+      {showSuccess && (
+        <div className="fixed top-10 left-1/2 -translate-x-1/2 z-[60] animate-in slide-in-from-top fade-in duration-300">
+          <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-4 rounded-xl shadow-xl flex items-center gap-3 border border-blue-500">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <span className="font-semibold text-lg">Thanks for payment sir!</span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

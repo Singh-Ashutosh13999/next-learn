@@ -1,5 +1,6 @@
 import Link from "next/link";
 import LogoutButton from "../components/logout-button.jsx";
+import MobileNav from "../components/mobile-nav.jsx";
 
 export default function DashboardLayout({ children }) {
   const links = [
@@ -43,13 +44,16 @@ export default function DashboardLayout({ children }) {
       <div className="flex-1 flex flex-col">
 
         {/* Header */}
-        <header className="bg-white shadow px-6 py-4 flex justify-between items-center">
+        <header className="relative bg-white shadow px-6 py-4 flex justify-between items-center">
 
           <h1 className="text-2xl font-bold text-slate-700">
             Dashboard
           </h1>
 
           <div className="flex items-center gap-4">
+            <MobileNav
+              links={links.map(({ name, href }) => ({ label: name, href }))}
+            />
 
             <img
               src="https://i.pravatar.cc/100?u=ashutosh"
@@ -67,17 +71,6 @@ export default function DashboardLayout({ children }) {
           </div>
 
         </header>
-
-        {/* Mobile Menu */}
-        <div className="md:hidden bg-slate-900 text-white overflow-x-auto">
-          <div className="flex gap-5 p-4">
-            {links.map((item) => (
-              <Link key={item.href} href={item.href}>
-                {item.name}
-              </Link>
-            ))}
-          </div>
-        </div>
 
         {/* Content */}
         <main className="flex-1 p-6">

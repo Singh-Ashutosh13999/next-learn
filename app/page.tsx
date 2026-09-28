@@ -1,119 +1,41 @@
-
 import Link from "next/link";
 
 export default function HomePage() {
   return (
-    
-    <div
-      style={{
-        fontFamily: "Arial, sans-serif",
-        background: "#f8fafc",
-      }}
-    >
+    <div className="font-sans bg-slate-50">
       {/* Hero Section */}
-      <section
-        style={{
-          minHeight: "90vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "80px",
-          background:
-            "linear-gradient(135deg, #2563eb, #4b63a5)",
-          color: "white",
-          flexWrap: "wrap",
-        }}
-      >
-        <div style={{ maxWidth: "550px" }}>
-          <h1
-            style={{
-              fontSize: "55px",
-              marginBottom: "20px",
-            }}
-          >
+      <section className="min-h-[90vh] flex flex-col lg:flex-row items-center justify-between p-8 md:p-12 lg:p-20 bg-gradient-to-br from-blue-600 to-indigo-600 text-white gap-10">
+        <div className="max-w-xl text-center lg:text-left mt-10 lg:mt-0">
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
             Learn Next.js Like a Professional
           </h1>
-
-          <p
-            style={{
-              fontSize: "18px",
-              lineHeight: "1.8",
-              color: "#e2e8f0",
-            }}
-          >
-            Build modern, fast, and SEO-friendly web applications using
-            Next.js. Learn routing, layouts, components, APIs, and much
-            more through real-world projects.
+          <p className="text-lg md:text-xl leading-relaxed text-slate-200 mb-8">
+            Build modern, fast, and SEO-friendly web applications using Next.js. Learn routing, layouts, components, APIs, and much more through real-world projects.
           </p>
-
           <Link href="/course">
-            <button
-            style={{
-              marginTop: "30px",
-              padding: "15px 35px",
-              background: "#fff",
-              color: "#2563eb",
-              border: "none",
-              borderRadius: "8px",
-              fontSize: "18px",
-              cursor: "pointer",
-              fontWeight: "bold",
-            }}
-            >
+            <button className="px-8 py-4 bg-white text-blue-600 rounded-lg text-lg font-bold shadow-lg hover:bg-slate-50 transition-colors w-full sm:w-auto">
               Get Started
             </button>
           </Link>
         </div>
-
-        <div>
+        <div className="w-full lg:w-1/2 flex justify-center mb-10 lg:mb-0">
           <img
             src="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=600"
             alt="Coding"
-            style={{
-              width: "500px",
-              maxWidth: "100%",
-              borderRadius: "15px",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
-            }}
+            className="w-full max-w-lg rounded-2xl shadow-2xl object-cover"
           />
         </div>
       </section>
 
       {/* Features */}
-      <section
-        style={{
-          padding: "80px",
-          textAlign: "center",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: "40px",
-            marginBottom: "15px",
-            color: "#1e293b",
-          }}
-        >
+      <section className="py-20 px-8 text-center bg-white">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-slate-800">
           Why Learn With Us?
         </h2>
-
-        <p
-          style={{
-            color: "#64748b",
-            marginBottom: "50px",
-            fontSize: "18px",
-          }}
-        >
+        <p className="text-slate-500 mb-12 text-lg">
           Everything you need to become a modern web developer.
         </p>
-
-        <div
-          style={{
-            display: "flex",
-            gap: "30px",
-            justifyContent: "center",
-            flexWrap: "wrap",
-          }}
-        >
+        <div className="flex flex-col md:flex-row gap-8 justify-center items-stretch max-w-6xl mx-auto">
           {[
             {
               title: "⚡ Fast Performance",
@@ -128,73 +50,27 @@ export default function HomePage() {
               desc: "Learn by building real-world applications from scratch.",
             },
           ].map((item, index) => (
-            <div
-              key={index}
-              style={{
-                width: "300px",
-                background: "white",
-                padding: "30px",
-                borderRadius: "15px",
-                boxShadow: "0 10px 20px rgba(0,0,0,0.08)",
-              }}
-            >
-              <h3
-                style={{
-                  color: "#2563eb",
-                  marginBottom: "15px",
-                }}
-              >
-                {item.title}
-              </h3>
-
-              <p
-                style={{
-                  color: "#555",
-                  lineHeight: "1.7",
-                }}
-              >
-                {item.desc}
-              </p>
+            <div key={index} className="flex-1 bg-slate-50 p-8 rounded-2xl shadow-md border border-slate-100 hover:shadow-xl transition-all">
+              <h3 className="text-xl font-bold text-blue-600 mb-4">{item.title}</h3>
+              <p className="text-slate-600 leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* CTA Section */}
-      <section
-        style={{
-          background: "#1e293b",
-          color: "white",
-          textAlign: "center",
-          padding: "80px 20px",
-        }}
-      >
-        <h2
-          style={{
-            fontSize: "42px",
-            marginBottom: "20px",
-          }}
-        >
+      <section className="bg-slate-800 text-white text-center py-20 px-8">
+        <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
           Start Your Next.js Journey Today
         </h2>
-
-        <p
-          style={{
-            color: "#cbd5e1",
-            fontSize: "18px",
-            marginBottom: "30px",
-          }}
-        >
+        <p className="text-slate-300 text-lg mb-10 max-w-2xl mx-auto">
           Join thousands of developers learning modern web development.
         </p>
-
-        <Link href="/course"
-          className="inline-block rounded-lg bg-blue-600 px-8 py-4 font-bold text-white">
-          <button
-           
-          >
-            Explore Courses
-          </button>
+        <Link
+          href="/course"
+          className="inline-block rounded-lg bg-blue-600 px-10 py-4 font-bold text-white shadow-lg hover:bg-blue-700 transition-colors w-full sm:w-auto"
+        >
+          Explore Courses
         </Link>
       </section>
     </div>
