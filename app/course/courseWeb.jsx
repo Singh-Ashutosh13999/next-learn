@@ -7,7 +7,7 @@ const courses = [
     id: 1,
     title: "React Fundamentals",
     description: "Learn the basics of React and build interactive components",
-    instructor: "John Doe",
+    instructor: "John Doe 1",
     price: 49.99,
     rating: 4.8,
     students: 1250,
