@@ -14,7 +14,7 @@ export default function HomePage() {
           </p>
           <Link href="/course">
             <button className="px-8 py-4 bg-white text-blue-600 rounded-lg text-lg font-bold shadow-lg hover:bg-slate-50 transition-colors w-full sm:w-auto">
-              Get Started
+              Get Started the Courses
             </button>
           </Link>
         </div>
